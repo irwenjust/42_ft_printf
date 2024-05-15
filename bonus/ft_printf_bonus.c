@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:00 by likong            #+#    #+#             */
-/*   Updated: 2024/05/14 13:59:14 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/15 11:12:25 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ int	check_type(char *str, size_t *i, va_list elements)
 	t_flags *flags;
 
 	flags = check_flags(str, i);
-	/*
+	
 	if (str[*i] == 'c')
-		return (ft_putchar(va_arg(elements, int)));
-	else if (str[*i] == 's')
+		return (ft_putchar_bonus(va_arg(elements, int), flags));
+	/*else if (str[*i] == 's')
 		return (ft_putstr(va_arg(elements, char *)));
 	else if (str[*i] == 'p')
 		return (ft_putpoint(va_arg(elements, void *)));
-	else */if (str[*i] == 'd' || str[*i] == 'i')
+	*/else if (str[*i] == 'd' || str[*i] == 'i')
 		return (ft_putnbr_bonus(va_arg(elements, int), flags));
 	/*else if (str[*i] == 'u')
 		return (ft_putnum_unsign(va_arg(elements, unsigned int)));

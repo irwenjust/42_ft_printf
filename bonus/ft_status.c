@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_bonus.c                                 :+:      :+:    :+:   */
+/*   ft_status.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/14 13:27:57 by likong            #+#    #+#             */
-/*   Updated: 2024/05/15 11:08:39 by likong           ###   ########.fr       */
+/*   Created: 2024/05/15 10:12:56 by likong            #+#    #+#             */
+/*   Updated: 2024/05/15 10:22:49 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-int	ft_putchar_bonus(int c, t_flags *flags)
+t_stat	*create_status(void)
 {
-	if (write(1, &c, 1) != 1)
-		return (-1);
-	free(flags);
-	return (1);
+	t_stat	*new;
+
+	new = (t_stat *)malloc(sizeof(t_stat));
+	if (!new)
+		return (NULL);
+	new->add = 0;
+	new->mark = 0;
+	new->slen = 0;
+	new->total_len = 0;
 }

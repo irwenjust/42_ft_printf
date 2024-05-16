@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:31:36 by likong            #+#    #+#             */
-/*   Updated: 2024/05/15 10:19:25 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/16 14:57:38 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static t_flags	*create_struct(void)
 	new->zero_offset = 0;
 	new->minus_offset = 0;
 	new->percision = 0;
+	new->move_len = 0;
 	return (new);
 }
 
@@ -40,27 +41,25 @@ static void	count_flags(t_flags *flags, char *str, size_t *i)
 		flags->space = 1;
 	else if (str[*i] == '#')
 		flags->hash = 1;
-	else if (str[*i] == '-')
-	{
-		flags->minus_offset = ft_atoi(str + (int)++(*i));
+	else if (str[*i] == '-' && !ft_strchr(CONVERSIONS, str[(*i) + 1]))
 		flags->minus = 1;
-		*i += count_num_len(flags->minus_offset);
-	}
-	else if (str[*i] == '.')
-	{
-		flags->percision = ft_atoi(str + (int)++(*i));
-		flags->dot = 1;
-		*i += count_num_len(flags->percision);
-	}
-	else if (str[*i] == '0')
-	{
-		flags->zero_offset = ft_atoi(str + (int)++(*i));
+	else if (str[*i] == '0' && !ft_strchr(CONVERSIONS, str[(*i) + 1]))
 		flags->zero = 1;
-		*i += count_num_len(flags->zero_offset);
+	i++;
+}
+
+static void	get_value(char *str, size_t *i, int *value, va_list elements)
+{
+	if (str[*i] == '*')
+		*value = va_arg(elements, int);
+	else
+	{
+		*value = ft_atoi(str + (int)*i);
+		*i += count_num_len(*value);
 	}
 }
 
-t_flags	*check_flags(char *str, size_t *i)
+t_flags	*check_flags(char *str, size_t *i, va_list elements)
 {
 	t_flags	*flags;
 
@@ -69,16 +68,16 @@ t_flags	*check_flags(char *str, size_t *i)
 		return (NULL);
 	while (!ft_strchr(CONVERSIONS, str[++(*i)]))
 	{
-		if (ft_strchr("+ #-.0", str[*i]))
+		if (ft_strchr("+ #-0", str[*i]))
 			count_flags(flags, str, i);
-		else
+		else if ((str[*i] >= '0' && str[*i] <= '9') || str[*i] == '*')
+			get_value(str, i, &flags->len, elements);
+		else if (str[*i] == '.' && ft_strchr(MNUMBER, str[(*i) + 1]))
 		{
-			flags->len = ft_atoi(str + (int)*i);
-			*i += count_num_len(flags->len);
-			//printf("len = %d, i = %zu, num_len = %d\n", flags->len, *i, count_num_len(flags->len));
+			(*i)++;
+			get_value(str, i, &flags->percision, elements);
 		}
-		//printf("str[i] = %c, i = %zu\n", str[*i], *i);
 	}
-	printf("percision = %d\nminus = %d\nminus_offset = %d\nzero_offset = %d\nlen = %d\n", flags->percision, flags->minus, flags->minus_offset, flags->zero_offset, flags->len);
+	//printf("percision = %d\nminus = %d\nminus_offset = %d\nzero_offset = %d\nlen = %d\nadd = %d\n", flags->percision, flags->minus, flags->minus_offset, flags->zero_offset, flags->len, flags->add);
 	return (flags);
 }

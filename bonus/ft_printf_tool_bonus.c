@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:10:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/16 21:31:30 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/17 10:51:59 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-int	get_hex_size(int num)
+int	get_hex_size(unsigned long long num)
 {
-	int				total;
-	unsigned int	nbrl;
+	int					total;
+	unsigned long long	nbrl;
 
 	total = 0;
 	nbrl = num;
@@ -70,15 +70,15 @@ int	get_hex_size(int num)
 	return (total);
 }
 
-int	print_number_base(int nbr, char *base)
+int	print_number_base(unsigned long long nbr, char *base)
 {
-	unsigned int	base_len;
-	unsigned int	nbrl;
-	int				total;
+	unsigned int		base_len;
+	unsigned long long	nbrl;
+	int					total;
 
 	total = 0;
 	nbrl = nbr;
-	base_len = ft_strlen(base);
+	base_len = str_length(base);
 	if (nbrl >= base_len)
 	{
 		total += print_number_base(nbrl / base_len, base);

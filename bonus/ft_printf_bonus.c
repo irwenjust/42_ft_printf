@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:00 by likong            #+#    #+#             */
-/*   Updated: 2024/05/16 18:56:27 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/17 13:20:43 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	check_type(char *str, size_t *i, va_list elements)
 		return (ft_putchar_bonus(va_arg(elements, int), flags));
 	else if (str[*i] == 's')
 		return (ft_putstr_bonus(va_arg(elements, char *), flags));
-	/*else if (str[*i] == 'p')
-		return (ft_putpoint(va_arg(elements, void *)));
-	*/else if (str[*i] == 'd' || str[*i] == 'i')
+	else if (str[*i] == 'p')
+		return (ft_putpoint_bonus(va_arg(elements, void *), flags));
+	else if (str[*i] == 'd' || str[*i] == 'i')
 		return (ft_putnbr_bonus(va_arg(elements, int), flags));
 	/*else if (str[*i] == 'u')
 		return (ft_putnum_unsign(va_arg(elements, unsigned int)));
@@ -71,7 +71,7 @@ int	ft_printf_bonus(const char *str, ...)
 {
 	va_list	elements;
 	size_t	len;
-
+	
 	len = 0;
 	va_start(elements, str);
 	len = next_func((char *)str, elements, len);

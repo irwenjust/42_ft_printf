@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:19 by likong            #+#    #+#             */
-/*   Updated: 2024/05/16 21:29:40 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/17 11:21:34 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,12 @@ typedef struct	s_flags
 {
 	int	minus;
 	int	zero;
-	int	dot;
 	int	hash;
 	int	space;
 	int	add;
-	int	zero_offset;
-	int	minus_offset;
 	int	percision;
 	int	len;
+	int	slen;
 	int move_len;
 } t_flags;
 
@@ -53,8 +51,8 @@ char	*ft_itoa(int n);
 size_t	str_length(char *str);
 int		count_num_len(int num);
 int		put_char(char c);
-int		get_hex_size(int num);
-int		print_number_base(int num, char *base);
+int		get_hex_size(unsigned long long num);
+int		print_number_base(unsigned long long num, char *base);
 
 
 //two struct functions
@@ -66,7 +64,7 @@ int		ft_printf_bonus(const char *str, ...);
 int		ft_putnbr_bonus(int n, t_flags *flags);
 int		ft_putchar_bonus(int c, t_flags *flags);
 int		ft_putstr_bonus(char *str, t_flags *flags);
-int		ft_putpoint_bonus(void *str, t_flags flags);
+int		ft_putpoint_bonus(void *str, t_flags *flags);
 
 
 #endif

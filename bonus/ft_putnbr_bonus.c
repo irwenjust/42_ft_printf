@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:17:23 by likong            #+#    #+#             */
-/*   Updated: 2024/05/16 20:26:00 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/17 17:00:58 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static int	check_dot(int total_len, t_flags *flags, char *str)
 	}
 	if (write(1, str, str_length(str)) == -1)
 		return (-1);
+	free(str);
 	while (flags->minus == 1 && flags->len > total_len)
 	{
 		if (write(1, " ", 1) == -1)
@@ -115,10 +116,7 @@ int	ft_putnbr_bonus(int n, t_flags *flags)
 		sign = 1;
 	str = ft_itoa(n);
 	if (!str)
-	{
-		free(flags);
 		return (0);
-	}
 	total_len = str_length(str);
 	//printf("str: %s, len: %d\n", str, total_len);
 	total_len = check_add_space(total_len, flags, str, sign);

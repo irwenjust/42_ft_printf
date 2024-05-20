@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:19 by likong            #+#    #+#             */
-/*   Updated: 2024/05/17 11:21:34 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/17 17:18:27 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct	s_flags
 	int	len;
 	int	slen;
 	int move_len;
+	int dot;
 } t_flags;
 
 typedef struct	s_stat
@@ -56,11 +57,11 @@ int		print_number_base(unsigned long long num, char *base);
 
 
 //two struct functions
-t_flags	*check_flags(char *str, size_t *i, va_list elements);
-t_stat	*create_status(void);
+t_flags	check_flags(char *str, size_t *i, va_list elements);
+t_stat	create_status(void);
 
 //mainly functions for bonus
-int		ft_printf_bonus(const char *str, ...);
+int		ft_printf(const char *str, ...);
 int		ft_putnbr_bonus(int n, t_flags *flags);
 int		ft_putchar_bonus(int c, t_flags *flags);
 int		ft_putstr_bonus(char *str, t_flags *flags);

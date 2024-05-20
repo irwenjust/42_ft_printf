@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:27:57 by likong            #+#    #+#             */
-/*   Updated: 2024/05/16 16:51:08 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/17 16:55:26 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,5 @@ int	ft_putchar_bonus(int c, t_flags *flags)
 	}
 	else
 		len += put_char((char)c);
-	free(flags);
 	return (len);
 }

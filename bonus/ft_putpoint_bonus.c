@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 20:27:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/17 17:01:13 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/20 10:41:29 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,7 @@ int	ft_putpoint_bonus(void *str, t_flags *flags)
 	unsigned long long	address;
 
 	address = (unsigned long long)str;
-	flags->slen = get_hex_size(address);
+	flags->slen = get_number_size(address, 16);
 	i = check_minus(address, flags);
-	/*
-	if (write(1, "0x", 2) != 2)
-		return (-1);
-	*/
 	return (i);
 }

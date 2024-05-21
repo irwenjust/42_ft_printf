@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 17:36:52 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 09:41:00 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 10:28:22 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	put_str(char *str, int *slen)
 
 static int	check_string(char *str, t_flags *flags, int len, int *slen)
 {
-	if (flags->percision < (int)str_length(str) && flags-> percision > 0)
+	if (flags->percision <= (int)str_length(str) && flags->dot == 1)
 		*slen = flags->percision;
 	else
 		*slen = str_length(str);
@@ -38,7 +38,7 @@ static int	check_string(char *str, t_flags *flags, int len, int *slen)
 		while (len < flags->len)
 			len += put_char(' ');
 	}
-	else if (flags->len != 0 && flags->zero == 0)
+	else if (flags->len > *slen && flags->zero == 0)
 	{
 		while (len < flags->len - *slen)
 			len += put_char(' ');
@@ -62,12 +62,11 @@ int	ft_putstr_bonus(char *str, t_flags *flags)
 
 	len = 0;
 	slen = 0;
-	if (flags->percision == 0 && flags->dot == 1)
-		return (0);
 	if (!str)
 	{
 		str = "(null)";
 		flags->slen = 6;
+		flags->nul = 1;
 	}
 	len = check_string(str, flags, len, &slen);
 	return (len);

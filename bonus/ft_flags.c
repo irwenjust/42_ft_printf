@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:31:36 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 09:59:42 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 10:23:22 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static t_flags	create_struct(void)
 	new.percision = 0;
 	new.move_len = 0;
 	new.dot = 0;
+	new.neg = 0;
+	new.nul = 0;
 	return (new);
 }
 
@@ -50,8 +52,11 @@ static void	get_value(char *str, size_t *i, int *value, va_list elements)
 		*value = va_arg(elements, int);
 	else
 	{
+		while (str[*i] == '0' && str[(*i) + 1] != 's')
+			(*i)++;
 		*value = ft_atoi(str + (int)*i);
-		*i += count_num_len(*value);
+		if (*value != 0)
+			*i += count_num_len(*value);
 	}
 }
 
@@ -72,12 +77,13 @@ t_flags	check_flags(char *str, size_t *i, va_list elements)
 			flags.dot = 1;
 			get_value(str, i, &flags.percision, elements);
 		}
-		else if (str[*i] == '.' && str[(*i) + 2] == 's')
+		else if (str[*i] == '.' && str[(*i) + 1] == 's')
 		{
 			(*i)++;
 			flags.dot = 1;
+			break ;
 		}
 	}
-	//printf("percision = %d\nminus = %d\nminus_offset = %d\nzero_offset = %d\nlen = %d\nadd = %d\n", flags.percision, flags.minus, flags.minus_offset, flags.zero_offset, flags.len, flags.add);
+	//printf("percision = %d\nminus = %d\nlen = %d\nadd = %d\n", flags.percision, flags.minus, flags.len, flags.add);
 	return (flags);
 }

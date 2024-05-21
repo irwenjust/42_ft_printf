@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:00 by likong            #+#    #+#             */
-/*   Updated: 2024/05/17 17:02:04 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 09:48:44 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,14 @@ int	check_type(char *str, size_t *i, va_list elements)
 		return (ft_putpoint_bonus(va_arg(elements, void *), &flags));
 	else if (str[*i] == 'd' || str[*i] == 'i')
 		return (ft_putnbr_bonus(va_arg(elements, int), &flags));
-	/*else if (str[*i] == 'u')
-		return (ft_putnum_unsign(va_arg(elements, unsigned int)));
+	else if (str[*i] == 'u')
+		return (ft_putunbr_bonus(va_arg(elements, unsigned int), &flags));
 	else if (str[*i] == 'x')
-		return (ft_puthex(va_arg(elements, int), HEXBASEL));
+		return (ft_puthex_bonus(va_arg(elements, int), HEXBASEL, &flags));
 	else if (str[*i] == 'X')
-		return (ft_puthex(va_arg(elements, int), HEXBASEH));
+		return (ft_puthex_bonus(va_arg(elements, int), HEXBASEH, &flags));
 	else if (str[*i] == '%')
-		return (write(1, "%", 1));
-	*/
+		return (ft_putchar_bonus((int)'%', &flags));
 	return (0);
 }
 

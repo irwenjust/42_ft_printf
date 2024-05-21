@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:17:23 by likong            #+#    #+#             */
-/*   Updated: 2024/05/17 17:00:58 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 10:55:07 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	check_zero(int total_len, t_flags *flags)
 
 	offset = 0;
 	while (flags->zero == 1 && flags->minus == 0 && flags->percision == 0
-			&& flags->len > total_len)
+			&& flags->len > total_len && flags->neg == 0)
 	{
 		if (flags->add == 1)
 		{
@@ -53,7 +53,7 @@ static int	check_dot(int total_len, t_flags *flags, char *str)
 		if (write(1, "+", 1) == -1)
 			return (-1);
 	}
-	while (flags->percision > slen++)
+	while (flags->percision > slen++ || (flags->len > total_len && flags->percision == 0 && flags->minus == 0))
 	{
 		if (write(1, "0", 1) == -1)
 			return (-1);
@@ -73,10 +73,10 @@ static int	check_dot(int total_len, t_flags *flags, char *str)
 
 static int	check_width(int total_len, t_flags *flags, char *str)
 {
-	if (flags->len > total_len && flags->minus == 0 && flags->zero == 0)
+	if (flags->len > total_len && flags->minus == 0)
 	{
-		while (total_len + flags->move_len < flags->len
-				&& flags->percision + flags->move_len < flags->len)
+		while (total_len + flags->move_len < flags->len && flags->zero == 0
+				&& flags->percision + flags->move_len + flags->neg + flags->add < flags->len)
 		{
 			if(write(1, " ", 1) == -1)
 				return (-1);
@@ -84,13 +84,23 @@ static int	check_width(int total_len, t_flags *flags, char *str)
 		}
 		total_len += flags->move_len;
 	}
+	if(flags->neg == 1)
+	{
+		if (write(1, "-", 1) == -1)
+			return (-1);
+		str = ft_substr(str, 1, str_length(str) - 1);
+		if (!str)
+			return (0);
+	}
 	total_len = check_dot(total_len, flags, str);
 	return (total_len);
 }
 
 static int	check_add_space(int total_len, t_flags *flags, char *str, int sign)
 {
-	if (flags->space != 0 && flags->add == 0)
+	if ((flags->space != 0 && flags->add == 0 && sign == 1
+		&& flags->percision >= flags->len) || (flags->space != 0 
+		&& flags->add == 0 && sign == 1 && flags->percision == 0))
 	{
 		if (write(1, " ", 1) == -1)
 			return (-1);
@@ -100,6 +110,8 @@ static int	check_add_space(int total_len, t_flags *flags, char *str, int sign)
 		flags->add = 0;
 	else if (flags->add != 0)
 		total_len++;
+	if (sign == 0)
+		flags->neg = 1;
 	total_len = check_width(total_len, flags, str);
 	return (total_len);
 }

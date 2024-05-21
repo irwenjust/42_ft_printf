@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:02:11 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 16:08:51 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/20 20:50:20 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 			i++;
 		}
 	}
+	free(s);
 	res[i] = '\0';
 	return (res);
 }

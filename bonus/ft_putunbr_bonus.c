@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 10:02:18 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 11:24:13 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 15:04:44 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ static int	check_zero(int total_len, t_flags *flags)
 	int	offset;
 
 	offset = 0;
-	while (flags->zero == 1 && flags->minus == 0 && flags->percision == 0
+	while (flags->zero == 1 && flags->minus == 0 && flags->dot == 0
 			&& flags->len > total_len)
 	{
 		if (write(1, "0", 1) == -1)
 			return (-1);
 		total_len++;
 	}
-	while (flags->zero == 1 && flags->minus == 0 && flags->percision != 0
+	while (flags->zero == 1 && flags->minus == 0 && flags->dot == 1
 			&& flags->len > (flags->percision + offset)
 			&& flags->len > (total_len + offset))
 	{
@@ -82,9 +82,17 @@ int	ft_putunbr_bonus(unsigned int n, t_flags *flags)
 	char			*str;
 	int				total_len;
 	
-	str = ft_itoa_p(n);
-	if (!str)
-		return (0);
+	if (n == 0 && flags->percision == 0 && flags->dot == 1)
+	{
+		str = (char *)malloc(sizeof(char));
+		*str = '\0';
+	}
+	else
+	{
+		str = ft_itoa_p(n);
+		if (!str)
+			return (0);
+	}
 	total_len = str_length(str);
 	total_len = check_width(total_len, flags, str);
 	return (total_len);

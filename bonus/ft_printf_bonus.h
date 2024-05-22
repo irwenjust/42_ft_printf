@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:19 by likong            #+#    #+#             */
-/*   Updated: 2024/05/21 09:29:03 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 17:48:34 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,6 @@ typedef struct	s_flags
 	int nul;
 } t_flags;
 
-typedef struct	s_stat
-{
-	int total_len;
-	int slen;
-	int add;
-	int mark;
-} t_stat;
-
 # define CONVERSIONS "%cspdiuxX\0"
 # define MNUMBER "0123456789*"
 
@@ -58,11 +50,12 @@ int		count_num_len(int num);
 int		put_char(char c);
 int		get_number_size(unsigned long long num, int base_size);
 int		print_number_base(unsigned long long num, char *base);
+int		print_number_base_h(unsigned long long nbr, char *base, t_flags *flags);
 char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strdup(char *s);
 
 //two struct functions
 t_flags	check_flags(char *str, size_t *i, va_list elements);
-t_stat	create_status(void);
 
 //mainly functions for bonus
 int		ft_printf(const char *str, ...);

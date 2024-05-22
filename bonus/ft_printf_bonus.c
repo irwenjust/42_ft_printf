@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:00 by likong            #+#    #+#             */
-/*   Updated: 2024/05/21 09:48:44 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 18:29:00 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	check_type(char *str, size_t *i, va_list elements)
 	else if (str[*i] == 'u')
 		return (ft_putunbr_bonus(va_arg(elements, unsigned int), &flags));
 	else if (str[*i] == 'x')
-		return (ft_puthex_bonus(va_arg(elements, int), HEXBASEL, &flags));
+		return (ft_puthex_bonus(va_arg(elements, unsigned int), HEXBASEL, &flags));
 	else if (str[*i] == 'X')
-		return (ft_puthex_bonus(va_arg(elements, int), HEXBASEH, &flags));
+		return (ft_puthex_bonus(va_arg(elements, unsigned int), HEXBASEH, &flags));
 	else if (str[*i] == '%')
 		return (ft_putchar_bonus((int)'%', &flags));
 	return (0);

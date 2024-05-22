@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:31:36 by likong            #+#    #+#             */
-/*   Updated: 2024/05/21 10:23:22 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/21 16:15:05 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	count_flags(t_flags *flags, char *str, size_t *i)
 	else if (str[*i] == ' ')
 		flags->space = 1;
 	else if (str[*i] == '#')
-		flags->hash = 1;
+		flags->hash = 2;
 	else if (str[*i] == '-' && !ft_strchr(CONVERSIONS, str[(*i) + 1]))
 		flags->minus = 1;
 	else if (str[*i] == '0' && !ft_strchr(CONVERSIONS, str[(*i) + 1]))
@@ -52,7 +52,7 @@ static void	get_value(char *str, size_t *i, int *value, va_list elements)
 		*value = va_arg(elements, int);
 	else
 	{
-		while (str[*i] == '0' && str[(*i) + 1] != 's')
+		while (str[*i] == '0' && !ft_strchr(CONVERSIONS, str[(*i) + 1]))
 			(*i)++;
 		*value = ft_atoi(str + (int)*i);
 		if (*value != 0)
@@ -77,7 +77,7 @@ t_flags	check_flags(char *str, size_t *i, va_list elements)
 			flags.dot = 1;
 			get_value(str, i, &flags.percision, elements);
 		}
-		else if (str[*i] == '.' && str[(*i) + 1] == 's')
+		else if (str[*i] == '.' && ft_strchr(CONVERSIONS, str[(*i) + 1]))
 		{
 			(*i)++;
 			flags.dot = 1;

@@ -6,13 +6,13 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 17:36:52 by likong            #+#    #+#             */
-/*   Updated: 2024/05/21 10:28:22 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/22 09:17:04 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-static int	put_str(char *str, int *slen)
+static int	put_str(char *str, int *slen, t_flags *flags)
 {
 	int i;
 
@@ -21,12 +21,13 @@ static int	put_str(char *str, int *slen)
 	{
 		if (write(1, &str[i], 1) != 1)
 			return (-1);
+		flags->tlen++;
 		i++;
 	}
 	return (i);
 }
 
-static int	check_string(char *str, t_flags *flags, int len, int *slen)
+static int	check_string(char *str, t_flags *flags, int *slen)
 {
 	if (flags->percision <= (int)str_length(str) && flags->dot == 1)
 		*slen = flags->percision;
@@ -34,25 +35,32 @@ static int	check_string(char *str, t_flags *flags, int len, int *slen)
 		*slen = str_length(str);
 	if (flags->minus == 1)
 	{
-		len += put_str(str, slen);
-		while (len < flags->len)
-			len += put_char(' ');
+		if (put_str(str, slen, flags) == -1)
+			return (-1);
+		while (flags->tlen < flags->len)
+			if (put_char(' ', flags) == -1)
+				return (-1);
 	}
 	else if (flags->len > *slen && flags->zero == 0)
 	{
-		while (len < flags->len - *slen)
-			len += put_char(' ');
-		len += put_str(str, slen);
+		while (flags->tlen < flags->len - *slen)
+			if (put_char(' ', flags) == -1)
+				return (-1);
+		if (put_str(str, slen, flags) == -1)
+			return (-1);
 	}
 	else if (flags->len != 0 && flags->zero != 0)
 	{
-		while (len < flags->len - *slen)
-			len += put_char('0');
-		len += put_str(str, slen);
+		while (flags->tlen < flags->len - *slen)
+			if (put_char(' ', flags) == -1)
+				return (-1);
+		if (put_str(str, slen, flags) == -1)
+			return (-1);
 	}
 	else
-		len += put_str(str, slen);
-	return (len);
+		if (put_str(str, slen, flags) == -1)
+			return (-1);
+	return (flags->tlen);
 }
 
 int	ft_putstr_bonus(char *str, t_flags *flags)
@@ -68,6 +76,6 @@ int	ft_putstr_bonus(char *str, t_flags *flags)
 		flags->slen = 6;
 		flags->nul = 1;
 	}
-	len = check_string(str, flags, len, &slen);
+	len = check_string(str, flags, &slen);
 	return (len);
 }

@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:10:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 10:52:25 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/22 10:39:47 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,23 @@ int	get_number_size(unsigned long long num, int base_size)
 	return (total);
 }
 
-int	print_number_base(unsigned long long nbr, char *base)
+int	print_number_base(unsigned long long nbr, char *base, t_flags *flags)
 {
 	unsigned int		base_len;
 	unsigned long long	nbrl;
-	int					total;
 
-	total = 0;
 	nbrl = nbr;
 	base_len = str_length(base);
 	if (nbrl >= base_len)
 	{
-		total += print_number_base(nbrl / base_len, base);
-		total += print_number_base(nbrl % base_len, base);
+		print_number_base(nbrl / base_len, base, flags);
+		print_number_base(nbrl % base_len, base, flags);
 	}
 	else
 	{
-		total += put_char(base[nbrl]);
+		if (put_char(base[nbrl], flags) == -1)
+			return (-1);
 	}
-	return (total);
+	return (1);
 }
 

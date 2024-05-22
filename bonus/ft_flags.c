@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:31:36 by likong            #+#    #+#             */
-/*   Updated: 2024/05/21 16:15:05 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/22 08:58:26 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static t_flags	create_struct(void)
 	new.slen = 0;
 	new.percision = 0;
 	new.move_len = 0;
+	new.tlen = 0;
 	new.dot = 0;
 	new.neg = 0;
 	new.nul = 0;

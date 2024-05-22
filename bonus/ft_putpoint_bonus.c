@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 20:27:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 10:41:29 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/22 10:21:55 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,70 +14,84 @@
 
 static int	check_zero_dot(unsigned long long address, t_flags *flags)
 {
-	int i;
 	int j;
 
-	i = 0;
 	j = 0;
 	if (write(1, "0x", 2) != 2)
 		return (-1);
-	i += 2;
+	flags->tlen += 2;
 	if (flags->percision > flags->slen)
+	{
 		while (flags->slen + j++ < flags->percision)
-			i += put_char('0');
+		{
+			if (put_char('0', flags) == -1)
+				return (-1);
+		}
+	}
 	else if (flags->zero > 0 && flags->len > flags->slen + 2
 			&& flags->percision == 0)
+	{
 		while (flags->len > flags->slen + 2 + j++)
-			i += put_char('0');
-	i += print_number_base(address, HEXBASEL);
-	return (i);
+		{
+			if (put_char('0', flags) == -1)
+				return (-1);
+		}
+	}
+	if (print_number_base(address, HEXBASEL, flags) == -1)
+		return (-1);
+	return (1);
 }
 
 static int	check_front(unsigned long long address, t_flags *flags)
 {
-	int i;
-
-	i = 0;
 	if (flags->len > 0 && flags->percision > 0)
-		while (flags->len > flags->percision + 2 + i
-				&& flags->len > flags->slen + 2 + i)
-			i += put_char(' ');
+	{
+		while (flags->len > flags->percision + 2 + flags->tlen
+				&& flags->len > flags->slen + 2 + flags->tlen)
+			if (put_char(' ', flags) == -1)
+				return (-1);
+	}
 	else if (flags->len > 0 && flags->percision == 0 && flags->zero == 0)
-		while (flags->len > flags->slen + 2 + i)
-			i += put_char(' ');
-	i += check_zero_dot(address, flags);
-	return (i);
+	{
+		while (flags->len > flags->slen + 2 + flags->tlen)
+			if (put_char(' ', flags) == -1)
+				return (-1);
+	}
+	if (check_zero_dot(address, flags) == -1)
+		return (-1);
+	return (1);
 }
 
 static int	check_minus(unsigned long long address, t_flags *flags)
 {
-	int	i;
-
-	i = 0;
 	if (flags->minus == 1)
 	{
 		if (write(1, "0x", 2) != 2)
 			return (-1);
 		if (flags->percision > flags->slen)
-			while (flags->percision - flags->slen > i)
-				i += put_char('0');
-		i += 2;
-		i += print_number_base(address, HEXBASEL);
-		while (flags->len > i)
-			i += put_char(' ');
+			while (flags->percision - flags->slen > flags->tlen)
+				if (put_char('0', flags) == -1)
+					return (-1);
+		flags->tlen += 2;
+		if (print_number_base(address, HEXBASEL, flags) == -1)
+			return (-1);
+		while (flags->len > flags->tlen)
+			if (put_char(' ', flags) == -1)
+				return (-1);
 	}
 	else
-		i += check_front(address, flags);
-	return (i);
+		if (check_front(address, flags) == -1)
+			return (-1);
+	return (1);
 }
 
 int	ft_putpoint_bonus(void *str, t_flags *flags)
 {
-	int					i;
 	unsigned long long	address;
 
 	address = (unsigned long long)str;
 	flags->slen = get_number_size(address, 16);
-	i = check_minus(address, flags);
-	return (i);
+	if (check_minus(address, flags) == -1)
+		return (-1);
+	return (flags->tlen);
 }

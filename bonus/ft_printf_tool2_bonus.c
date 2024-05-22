@@ -6,11 +6,17 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:02:11 by likong            #+#    #+#             */
-/*   Updated: 2024/05/21 16:22:21 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/22 12:26:17 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
+
+void	ft_free(char **str)
+{
+	free(*str);
+	*str = NULL;
+}
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
@@ -67,6 +73,7 @@ int	print_number_base_h(unsigned long long nbr, char *base, t_flags *flags)
 	{
 		if(write(1, " ", 1) == -1)
 			return (-1);
+		flags->tlen++;
 		return (1);
 	}
 	else if(nbr == 0 && flags->percision == 0 && flags->dot == 1 && flags->len == 0)
@@ -76,12 +83,13 @@ int	print_number_base_h(unsigned long long nbr, char *base, t_flags *flags)
 	base_len = str_length(base);
 	if (nbrl >= base_len)
 	{
-		total += print_number_base(nbrl / base_len, base);
-		total += print_number_base(nbrl % base_len, base);
+		print_number_base_h(nbrl / base_len, base, flags);
+		print_number_base_h(nbrl % base_len, base, flags);
 	}
 	else
 	{
-		total += put_char(base[nbrl]);
+		if (put_char(base[nbrl], flags) == -1)
+			return (-1);
 	}
-	return (total);
+	return (1);
 }

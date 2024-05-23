@@ -6,20 +6,18 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:54:22 by likong            #+#    #+#             */
-/*   Updated: 2024/05/20 11:23:53 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 11:33:11 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-static int	get_len(int n)
+static int	get_len(long num)
 {
 	int		size;
-	long	num;
 
 	size = 1;
-	num = n;
-	if (n < 0)
+	if (num < 0)
 	{
 		size++;
 		num = -num;
@@ -32,31 +30,29 @@ static int	get_len(int n)
 	return (size);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(long n)
 {
 	char	*res;
 	int		len;
-	long	num;
 
 	len = get_len(n);
-	num = n;
 	res = (char *)malloc(len + 1);
 	if (!res)
 		return (NULL);
-	if (num < 0)
+	if (n < 0)
 	{
 		res[0] = '-';
-		num = -num;
+		n = -n;
 	}
-	else if (num == 0)
+	else if (n == 0)
 	{
 		res[0] = '0';
 	}
 	res[len--] = '\0';
-	while (num > 0)
+	while (n > 0)
 	{
-		res[len--] = num % 10 + '0';
-		num /= 10;
+		res[len--] = n % 10 + '0';
+		n /= 10;
 	}
 	return (res);
 }

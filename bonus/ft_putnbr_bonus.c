@@ -6,137 +6,123 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:17:23 by likong            #+#    #+#             */
-/*   Updated: 2024/05/22 13:03:42 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 17:26:05 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-static int	check_zero(t_flags *flags)
+int write_buffer(char *buffer, int len)
 {
-	//printf("flags->len: %d, total_len: %d\n", flags->len, total_len);
+	return (write(1, buffer, len));
+}
+
+static int	check_zero(t_flags *flags, char *buff, int *buf_index)
+{
+	//printf ("before_tlen: %d, len: %d, per: %d, slen: %d\n", flags->tlen, flags->len, flags->percision, flags->slen);
 	while (flags->zero == 1 && flags->minus == 0 && flags->dot == 0
 			&& flags->len > flags->tlen && flags->neg == 0)
 	{
 		if (flags->add == 1)
 		{
-			if (write(1, "+", 1) == -1)
-				return (-1);
+			buff[(*buf_index)++] = '+';
 			flags->add = 0;
 		}
-		if (write(1, "0", 1) == -1)
-			return (-1);
+		buff[(*buf_index)++] = '0';
 		flags->tlen++;
 	}
 	return (1);
 }
 
-static int	check_dot(t_flags *flags, char *str)
+static int	check_dot(t_flags *flags, long num, char *buff, int *buf_index)
 {
-	flags->slen = str_length(str);
-	if (check_zero(flags) == -1)
+	if (check_zero(flags, buff, buf_index) == -1)
 		return (-1);
 	if (flags->add == 1)
-	{
-		if (write(1, "+", 1) == -1)
-			return (-1);
-	}
+		buff[(*buf_index)++] = '+';
 	while (flags->percision > flags->slen++ || (flags->len > flags->tlen && flags->dot == 0 
-			&& flags->minus == 0 && str))
+			&& flags->minus == 0 && flags->nul != 1))
 	{
-		if (write(1, "0", 1) == -1)
-			return (-1);
+		buff[(*buf_index)++] = '0';
 		flags->tlen++;
 	}
-	if (write(1, str, str_length(str)) == -1)
+	if (print_number_base_h(num, DECIMEL, flags, &buff, buf_index) == -1)
 		return (-1);
-	ft_free(&str);
+	//printf("len: %d, tlen: %d, index: %d\n", flags->len, flags->tlen, *buf_index);
+	flags->tlen -= get_number_size((unsigned long long)num, 10);
 	while (flags->minus == 1 && flags->len > flags->tlen)
 	{
-		if (write(1, " ", 1) == -1)
-			return (-1);
+		buff[(*buf_index)++] = ' ';
 		flags->tlen++;
 	}
 	return (1);
 }
 
-static int	check_width(t_flags *flags, char *str)
+static int	check_width(t_flags *flags, long num, char *buff, int *buf_index)
 {
+	//printf("nul: %d, tlen: %d, len: %d\n", flags->nul, flags->tlen, flags->len);
 	if (flags->len > flags->tlen && flags->minus == 0)
 	{
-		while ((flags->tlen + flags->move_len < flags->len && flags->zero == 0
+		while ((flags->tlen + flags->move_len + flags->neg - flags->nul < flags->len && flags->zero == 0
 				&& flags->percision + flags->move_len + flags->neg + flags->add + flags->space
 				< flags->len) || (flags->zero == 1 && flags->dot == 1
 				&& flags->len > (flags->percision + flags->move_len + flags->neg + flags->space
-				+ flags->add) && flags->len > (flags->tlen + flags->move_len)))
+				+ flags->add) && flags->len > (flags->tlen + flags->neg + flags->move_len - flags->nul)))
 		{
-			if(write(1, " ", 1) == -1)
-				return (-1);
+			buff[(*buf_index)++] = ' ';
 			flags->move_len++;
 		}
 		flags->tlen += flags->move_len;
 	}
 	if(flags->neg == 1)
 	{
-		if (write(1, "-", 1) == -1)
-			return (-1);
-		str = ft_substr(str, 1, str_length(str) - 1);
-		if (!str)
-			return (-1);
+		buff[(*buf_index)++] = '-';
+		flags->tlen++;
 	}
-	if (check_dot(flags, str) == -1)
+	if (check_dot(flags, num, buff, buf_index) == -1)
 		return (-1);
 	return (1);
 }
 
-static int	check_add_space(t_flags *flags, char *str, int sign)
+static int	check_add_space(t_flags *flags, long num, char *buff, int *buf_index)
 {
-	if (flags->space != 0 && flags->add == 0 && sign == 1)
+	if (flags->space != 0 && flags->add == 0 && flags->neg == 0)
 	{
-		if (write(1, " ", 1) == -1)
-			return (-1);
+		buff[(*buf_index)++] = ' ';
 		flags->tlen++;
 	}
-	else if (flags->add != 0 && sign == 0)
+	else if (flags->add != 0 && flags->neg == 1)
 		flags->add = 0;
 	else if (flags->add != 0)
 		flags->tlen++;
-	if (sign == 0)
-	{
-		flags->neg = 1;
+	if (flags->neg == 1)
 		flags->space = 0;
-	}
-	if (check_width(flags, str) == -1)
+	if (check_width(flags, num, buff, buf_index) == -1)
 		return (-1);
 	return (1);
 }
 
 int	ft_putnbr_bonus(int n, t_flags *flags)
 {
-	int		sign;
-	char	*str;
+	long	num;
+	char	buff[4096];
+	int		buf_index = 0;
 
-	if (n < 0)
-		sign = 0;
-	else
-		sign = 1;
-	if (n == 0 && flags->percision == 0 && flags->dot == 1)
+	num = n;
+	if (num < 0)
 	{
-		str = (char *)malloc(sizeof(char));
-		*str = '\0';
+		flags->neg = 1;
+		num = -num;
 	}
-	else
-	{
-		str = ft_itoa(n);
-		if (!str)
-			return (0);
-	}
-	flags->tlen = str_length(str);
-	if (check_add_space(flags, str, sign) == -1)
-	{
-		if (str)
-			ft_free(&str);
+	if (num == 0)
+		flags->nul = 1;
+	if (num == 0 && flags->zero == 0 && flags->dot == 0)
+		flags->nul = 0;
+	flags->slen = get_number_size((unsigned long long)num, 10);
+	flags->tlen = get_number_size((unsigned long long)num, 10);
+	if (check_add_space(flags, num, buff, &buf_index) == -1)
 		return (-1);
-	}
+	if (write_buffer(buff, buf_index) == -1)
+		return (-1);
 	return (flags->tlen);
 }

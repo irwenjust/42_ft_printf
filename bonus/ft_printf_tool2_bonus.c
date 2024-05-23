@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:02:11 by likong            #+#    #+#             */
-/*   Updated: 2024/05/22 12:26:17 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 16:26:25 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,6 @@ void	ft_free(char **str)
 {
 	free(*str);
 	*str = NULL;
-}
-
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	size_t	i;
-	char	*res;
-
-	if (!s)
-		return (NULL);
-	if (len > str_length(s) - start)
-		len = str_length(s) - start;
-	res = (char *)malloc((len + 1) * sizeof(*s));
-	if (!res)
-		return (NULL);
-	i = 0;
-	if (start <= str_length(s))
-	{
-		while (s[i + start] && i < len)
-		{
-			res[i] = s[i + start];
-			i++;
-		}
-	}
-	free(s);
-	res[i] = '\0';
-	return (res);
 }
 
 char	*ft_strdup(char *s1)
@@ -63,33 +37,35 @@ char	*ft_strdup(char *s1)
 	return (dup);
 }
 
-int	print_number_base_h(unsigned long long nbr, char *base, t_flags *flags)
+int	print_number_base_h(unsigned long long nbr, char *base, t_flags *flags, char **buff, int *index)
 {
 	unsigned int		base_len;
 	unsigned long long	nbrl;
 	int					total;
 
-	if (nbr == 0 && flags->percision == 0 && flags->dot == 1 && flags->len > 0)
+	if (flags->nul == 1 && flags->percision == 0 && flags->dot == 1 && flags->len > 0)
 	{
-		if(write(1, " ", 1) == -1)
-			return (-1);
-		flags->tlen++;
+		if (*index < flags->len)
+		{
+			(*buff)[(*index)++] = ' ';
+			flags->tlen++;
+		}
 		return (1);
 	}
-	else if(nbr == 0 && flags->percision == 0 && flags->dot == 1 && flags->len == 0)
+	else if(flags->nul == 1 && flags->percision == 0 && flags->dot == 1 && flags->len == 0)
 		return (0);
 	total = 0;
 	nbrl = nbr;
 	base_len = str_length(base);
 	if (nbrl >= base_len)
 	{
-		print_number_base_h(nbrl / base_len, base, flags);
-		print_number_base_h(nbrl % base_len, base, flags);
+		print_number_base_h(nbrl / base_len, base, flags, buff, index);
+		print_number_base_h(nbrl % base_len, base, flags, buff, index);
 	}
 	else
 	{
-		if (put_char(base[nbrl], flags) == -1)
-			return (-1);
+		(*buff)[(*index)++] = base[nbrl];
+		flags->tlen++;
 	}
 	return (1);
 }

@@ -6,92 +6,92 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 20:27:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/22 10:21:55 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 18:54:24 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-static int	check_zero_dot(unsigned long long address, t_flags *flags)
+static int	check_zero_dot(uintptr_t address, t_flags *fg)
 {
 	int j;
 
 	j = 0;
 	if (write(1, "0x", 2) != 2)
 		return (-1);
-	flags->tlen += 2;
-	if (flags->percision > flags->slen)
+	fg->tlen += 2;
+	if (fg->percision > fg->slen)
 	{
-		while (flags->slen + j++ < flags->percision)
+		while (fg->slen + j++ < fg->percision)
 		{
-			if (put_char('0', flags) == -1)
+			if (put_char('0', fg) == -1)
 				return (-1);
 		}
 	}
-	else if (flags->zero > 0 && flags->len > flags->slen + 2
-			&& flags->percision == 0)
+	else if (fg->zero > 0 && fg->len > fg->slen + 2
+			&& fg->percision == 0)
 	{
-		while (flags->len > flags->slen + 2 + j++)
+		while (fg->len > fg->slen + 2 + j++)
 		{
-			if (put_char('0', flags) == -1)
+			if (put_char('0', fg) == -1)
 				return (-1);
 		}
 	}
-	if (print_number_base(address, HEXBASEL, flags) == -1)
+	if (print_number_base(address, HEXL, fg) == -1)
 		return (-1);
 	return (1);
 }
 
-static int	check_front(unsigned long long address, t_flags *flags)
+static int	check_front(uintptr_t address, t_flags *fg)
 {
-	if (flags->len > 0 && flags->percision > 0)
+	if (fg->len > 0 && fg->percision > 0)
 	{
-		while (flags->len > flags->percision + 2 + flags->tlen
-				&& flags->len > flags->slen + 2 + flags->tlen)
-			if (put_char(' ', flags) == -1)
+		while (fg->len > fg->percision + 2 + fg->tlen
+				&& fg->len > fg->slen + 2 + fg->tlen)
+			if (put_char(' ', fg) == -1)
 				return (-1);
 	}
-	else if (flags->len > 0 && flags->percision == 0 && flags->zero == 0)
+	else if (fg->len > 0 && fg->percision == 0 && fg->zero == 0)
 	{
-		while (flags->len > flags->slen + 2 + flags->tlen)
-			if (put_char(' ', flags) == -1)
+		while (fg->len > fg->slen + 2 + fg->tlen)
+			if (put_char(' ', fg) == -1)
 				return (-1);
 	}
-	if (check_zero_dot(address, flags) == -1)
+	if (check_zero_dot(address, fg) == -1)
 		return (-1);
 	return (1);
 }
 
-static int	check_minus(unsigned long long address, t_flags *flags)
+static int	check_minus(uintptr_t address, t_flags *fg)
 {
-	if (flags->minus == 1)
+	if (fg->minus == 1)
 	{
 		if (write(1, "0x", 2) != 2)
 			return (-1);
-		if (flags->percision > flags->slen)
-			while (flags->percision - flags->slen > flags->tlen)
-				if (put_char('0', flags) == -1)
+		if (fg->percision > fg->slen)
+			while (fg->percision - fg->slen > fg->tlen)
+				if (put_char('0', fg) == -1)
 					return (-1);
-		flags->tlen += 2;
-		if (print_number_base(address, HEXBASEL, flags) == -1)
+		fg->tlen += 2;
+		if (print_number_base(address, HEXL, fg) == -1)
 			return (-1);
-		while (flags->len > flags->tlen)
-			if (put_char(' ', flags) == -1)
+		while (fg->len > fg->tlen)
+			if (put_char(' ', fg) == -1)
 				return (-1);
 	}
 	else
-		if (check_front(address, flags) == -1)
+		if (check_front(address, fg) == -1)
 			return (-1);
 	return (1);
 }
 
-int	ft_putpoint_bonus(void *str, t_flags *flags)
+int	ft_putpoint_bonus(void *str, t_flags *fg)
 {
-	unsigned long long	address;
+	uintptr_t	address;
 
-	address = (unsigned long long)str;
-	flags->slen = get_number_size(address, 16);
-	if (check_minus(address, flags) == -1)
+	address = (uintptr_t)str;
+	fg->slen = get_number_size(address, 16);
+	if (check_minus(address, fg) == -1)
 		return (-1);
-	return (flags->tlen);
+	return (fg->tlen);
 }

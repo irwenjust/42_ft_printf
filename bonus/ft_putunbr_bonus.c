@@ -6,102 +6,85 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 10:02:18 by likong            #+#    #+#             */
-/*   Updated: 2024/05/22 14:20:32 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 18:55:02 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-static int	check_zero(t_flags *flags)
+static int	check_zero(t_flags *fg, char *buff, int *buf_index)
 {
 	int	offset;
 
 	offset = 0;
-	while (flags->zero == 1 && flags->minus == 0 && flags->dot == 0
-			&& flags->len > flags->tlen)
+	while (fg->zero == 1 && fg->minus == 0 && fg->dot == 0
+			&& fg->len > fg->tlen)
 	{
-		if (write(1, "0", 1) == -1)
-			return (-1);
-		flags->tlen++;
+		buff[(*buf_index)++] = '0';
+		fg->tlen++;
 	}
-	while (flags->zero == 1 && flags->minus == 0 && flags->dot == 1
-			&& flags->len > (flags->percision + offset)
-			&& flags->len > (flags->tlen + offset))
+	while (fg->zero == 1 && fg->minus == 0 && fg->dot == 1
+			&& fg->len > (fg->percision + offset)
+			&& fg->len > (fg->tlen + offset))
 	{
-		if (write(1, " ", 1) == -1)
-			return (-1);
+		buff[(*buf_index)++] = ' ';
 		offset++;
 	}
-	flags->tlen += offset;
+	fg->tlen += offset;
 	return (1);
 }
 
-static int	check_dot(t_flags *flags, char *str)
+static int	check_dot(t_flags *fg, unsigned int num, char *buff, int *buf_index)
 {
-	int slen;
-
-	slen = str_length(str);
-	if (check_zero(flags) == -1)
+	if (check_zero(fg, buff, buf_index) == -1)
 		return (-1);
-	while (flags->percision > slen++)
+	while (fg->percision > fg->slen++)
 	{
-		if (write(1, "0", 1) == -1)
-			return (-1);
-		flags->tlen++;
+		buff[(*buf_index)++] = '0';
+		fg->tlen++;
 	}
-	if (write(1, str, str_length(str)) == -1)
+	if (print_number_base_h(num, DECIMEL, fg, &buff, buf_index) == -1)
 		return (-1);
-	free(str);
-	while (flags->minus == 1 && flags->len > flags->tlen)
+	fg->tlen -= get_number_size((unsigned long long)num, 10);
+	while (fg->minus == 1 && fg->len > fg->tlen)
 	{
-		if (write(1, " ", 1) == -1)
-			return (-1);
-		flags->tlen++;
+		buff[(*buf_index)++] = ' ';
+		fg->tlen++;
 	}
 	return (1);
 }
 
-static int	check_width(t_flags *flags, char *str)
+static int	check_width(t_flags *fg, unsigned int num, char *buff, int *buf_index)
 {
-	if (flags->len > flags->tlen && flags->minus == 0 && flags->zero == 0)
+	if (fg->len > fg->tlen && fg->minus == 0 && fg->zero == 0)
 	{
-		while (flags->tlen + flags->move_len < flags->len
-				&& flags->percision + flags->move_len < flags->len)
+		while (fg->tlen + fg->move_len < fg->len
+				&& fg->percision + fg->move_len < fg->len)
 		{
-			if(write(1, " ", 1) == -1)
-				return (-1);
-			flags->move_len++;
+			buff[(*buf_index)++] = ' ';
+			fg->move_len++;
 		}
-		flags->tlen += flags->move_len;
+		fg->tlen += fg->move_len;
 	}
-	if (check_dot(flags, str) == -1)
+	if (check_dot(fg, num, buff, buf_index) == -1)
 		return (-1);
 	return (1);
 }
 
-int	ft_putunbr_bonus(unsigned int n, t_flags *flags)
+int	ft_putunbr_bonus(unsigned int num, t_flags *fg)
 {
-	char			*str;
+	char	buff[4096];
+	int		buf_index = 0;
 	
-	if (n == 0 && flags->percision == 0 && flags->dot == 1)
-	{
-		str = (char *)malloc(sizeof(char));
-		if (!str)
-			return (-1);
-		*str = '\0';
-	}
-	else
-	{
-		str = ft_itoa_p(n);
-		if (!str)
-			return (-1);
-	}
-	flags->tlen = str_length(str);
-	if (check_width(flags, str) == -1)
-	{
-		if (str)
-			ft_free(&str);
+	if (num == 0)
+		fg->nul = 1;
+	if (num == 0 && fg->zero == 0 && fg->dot == 0)
+		fg->nul = 0;
+	fg->slen = get_number_size((unsigned long long)num, 10);
+	fg->tlen = get_number_size((unsigned long long)num, 10);
+	if (check_width(fg, num, buff, &buf_index) == -1)
 		return (-1);
-	}
-	return (flags->tlen);
+	if (write_buffer(buff, buf_index) == -1)
+		return (-1);
+	return (fg->tlen);
 }

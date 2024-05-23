@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:31:36 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 16:04:45 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 18:48:08 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,28 @@ static void	get_value(char *str, size_t *i, int *value, va_list elements)
 
 t_flags	check_flags(char *str, size_t *i, va_list elements)
 {
-	t_flags	flags;
+	t_flags	fg;
 
-	flags = create_struct();
+	fg = create_struct();
 	while (!ft_strchr(CONVERSIONS, str[++(*i)]))
 	{
 		if (ft_strchr("+ #-0", str[*i]))
-			count_flags(&flags, str, i);
+			count_flags(&fg, str, i);
 		else if ((str[*i] >= '0' && str[*i] <= '9') || str[*i] == '*')
-			get_value(str, i, &flags.len, elements);
+			get_value(str, i, &fg.len, elements);
 		else if (str[*i] == '.' && ft_strchr(MNUMBER, str[(*i) + 1]))
 		{
 			(*i)++;
-			flags.dot = 1;
-			get_value(str, i, &flags.percision, elements);
+			fg.dot = 1;
+			get_value(str, i, &fg.percision, elements);
 		}
 		else if (str[*i] == '.' && ft_strchr(CONVERSIONS, str[(*i) + 1]))
 		{
 			(*i)++;
-			flags.dot = 1;
+			fg.dot = 1;
 			break ;
 		}
 	}
 	//printf("percision = %d\nminus = %d\nlen = %d\nadd = %d\n", flags.percision, flags.minus, flags.len, flags.add);
-	return (flags);
+	return (fg);
 }

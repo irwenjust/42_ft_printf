@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:00 by likong            #+#    #+#             */
-/*   Updated: 2024/05/22 10:34:40 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 18:48:45 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,32 @@
 
 int	check_type(char *str, size_t *i, va_list elements)
 {
-	t_flags flags;
+	t_flags	fg;
 
-	flags = check_flags(str, i, elements);
+	fg = check_flags(str, i, elements);
 	if (str[*i] == 'c')
-		return (ft_putchar_bonus(va_arg(elements, int), &flags));
+		return (ft_putchar_bonus(va_arg(elements, int), &fg));
 	else if (str[*i] == 's')
-		return (ft_putstr_bonus(va_arg(elements, char *), &flags));
+		return (ft_putstr_bonus(va_arg(elements, char *), &fg));
 	else if (str[*i] == 'p')
-		return (ft_putpoint_bonus(va_arg(elements, void *), &flags));
+		return (ft_putpoint_bonus(va_arg(elements, void *), &fg));
 	else if (str[*i] == 'd' || str[*i] == 'i')
-		return (ft_putnbr_bonus(va_arg(elements, int), &flags));
+		return (ft_putnbr_bonus(va_arg(elements, int), &fg));
 	else if (str[*i] == 'u')
-		return (ft_putunbr_bonus(va_arg(elements, unsigned int), &flags));
+		return (ft_putunbr_bonus(va_arg(elements, unsigned int), &fg));
 	else if (str[*i] == 'x')
-		return (ft_puthex_bonus(va_arg(elements, int), HEXBASEL, &flags));
+		return (ft_puthex_bonus(va_arg(elements, unsigned int), HEXL, &fg));
 	else if (str[*i] == 'X')
-		return (ft_puthex_bonus(va_arg(elements, int), HEXBASEH, &flags));
+		return (ft_puthex_bonus(va_arg(elements, unsigned int), HEXH, &fg));
 	else if (str[*i] == '%')
-		return (ft_putchar_bonus((int)'%', &flags));
+		return (ft_putchar_bonus('%', &fg));
 	return (0);
 }
 
 static int	next_func(char *str, va_list elements, size_t len)
 {
 	size_t	i;
-	int	j;
+	int		j;
 
 	i = 0;
 	j = 0;
@@ -69,7 +69,7 @@ int	ft_printf(const char *str, ...)
 {
 	va_list	elements;
 	size_t	len;
-	
+
 	len = 0;
 	if (!str)
 		return (0);

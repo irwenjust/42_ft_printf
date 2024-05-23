@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:10:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/22 16:17:32 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/23 18:51:18 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-int	get_number_size(unsigned long long num, int base_size)
+int	get_number_size(uintptr_t num, int base_size)
 {
 	int					total;
-	unsigned long long	nbrl;
+	uintptr_t	nbrl;
 
 	total = 0;
 	nbrl = num;
-	if (nbrl >= (unsigned long long)base_size)
+	if (nbrl >= (uintptr_t)base_size)
 	{
 		total += get_number_size(nbrl / base_size, base_size);
 		total += get_number_size(nbrl % base_size, base_size);
@@ -70,23 +70,22 @@ int	get_number_size(unsigned long long num, int base_size)
 	return (total);
 }
 
-int	print_number_base(unsigned long long nbr, char *base, t_flags *flags)
+int	print_number_base(uintptr_t nbr, char *base, t_flags *fg)
 {
 	unsigned int		base_len;
-	unsigned long long	nbrl;
+	uintptr_t	nbrl;
 
 	nbrl = nbr;
 	base_len = str_length(base);
 	if (nbrl >= base_len)
 	{
-		print_number_base(nbrl / base_len, base, flags);
-		print_number_base(nbrl % base_len, base, flags);
+		print_number_base(nbrl / base_len, base, fg);
+		print_number_base(nbrl % base_len, base, fg);
 	}
 	else
 	{
-		if (put_char(base[nbrl], flags) == -1)
+		if (put_char(base[nbrl], fg) == -1)
 			return (-1);
 	}
 	return (1);
 }
-

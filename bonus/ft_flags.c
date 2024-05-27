@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:31:36 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 18:48:08 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/27 16:03:51 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ static t_flags	create_struct(void)
 	new.zero = 0;
 	new.len = 0;
 	new.slen = 0;
-	new.percision = 0;
-	new.move_len = 0;
+	new.perc = 0;
+	new.mlen = 0;
 	new.tlen = 0;
 	new.dot = 0;
 	new.neg = 0;
 	new.nul = 0;
-	new.d = 0;
+	new.base = 0;
 	return (new);
 }
 
@@ -77,7 +77,7 @@ t_flags	check_flags(char *str, size_t *i, va_list elements)
 		{
 			(*i)++;
 			fg.dot = 1;
-			get_value(str, i, &fg.percision, elements);
+			get_value(str, i, &fg.perc, elements);
 		}
 		else if (str[*i] == '.' && ft_strchr(CONVERSIONS, str[(*i) + 1]))
 		{

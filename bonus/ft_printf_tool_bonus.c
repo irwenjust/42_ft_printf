@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:10:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 18:51:18 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/27 15:41:38 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*ft_strchr(char *s, int c)
 
 int	get_number_size(uintptr_t num, int base_size)
 {
-	int					total;
+	int			total;
 	uintptr_t	nbrl;
 
 	total = 0;
@@ -72,8 +72,8 @@ int	get_number_size(uintptr_t num, int base_size)
 
 int	print_number_base(uintptr_t nbr, char *base, t_flags *fg)
 {
-	unsigned int		base_len;
-	uintptr_t	nbrl;
+	unsigned int	base_len;
+	uintptr_t		nbrl;
 
 	nbrl = nbr;
 	base_len = str_length(base);

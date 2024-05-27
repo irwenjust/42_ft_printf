@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 20:27:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 18:54:24 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/27 16:26:55 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,24 @@
 
 static int	check_zero_dot(uintptr_t address, t_flags *fg)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	if (write(1, "0x", 2) != 2)
 		return (-1);
 	fg->tlen += 2;
-	if (fg->percision > fg->slen)
+	if (fg->perc > fg->slen)
 	{
-		while (fg->slen + j++ < fg->percision)
-		{
+		while (fg->slen + j++ < fg->perc)
 			if (put_char('0', fg) == -1)
 				return (-1);
-		}
 	}
 	else if (fg->zero > 0 && fg->len > fg->slen + 2
-			&& fg->percision == 0)
+		&& fg->perc == 0)
 	{
 		while (fg->len > fg->slen + 2 + j++)
-		{
 			if (put_char('0', fg) == -1)
 				return (-1);
-		}
 	}
 	if (print_number_base(address, HEXL, fg) == -1)
 		return (-1);
@@ -44,14 +40,14 @@ static int	check_zero_dot(uintptr_t address, t_flags *fg)
 
 static int	check_front(uintptr_t address, t_flags *fg)
 {
-	if (fg->len > 0 && fg->percision > 0)
+	if (fg->len > 0 && fg->perc > 0)
 	{
-		while (fg->len > fg->percision + 2 + fg->tlen
-				&& fg->len > fg->slen + 2 + fg->tlen)
+		while (fg->len > fg->perc + 2 + fg->tlen
+			&& fg->len > fg->slen + 2 + fg->tlen)
 			if (put_char(' ', fg) == -1)
 				return (-1);
 	}
-	else if (fg->len > 0 && fg->percision == 0 && fg->zero == 0)
+	else if (fg->len > 0 && fg->perc == 0 && fg->zero == 0)
 	{
 		while (fg->len > fg->slen + 2 + fg->tlen)
 			if (put_char(' ', fg) == -1)
@@ -68,8 +64,8 @@ static int	check_minus(uintptr_t address, t_flags *fg)
 	{
 		if (write(1, "0x", 2) != 2)
 			return (-1);
-		if (fg->percision > fg->slen)
-			while (fg->percision - fg->slen > fg->tlen)
+		if (fg->perc > fg->slen)
+			while (fg->perc - fg->slen > fg->tlen)
 				if (put_char('0', fg) == -1)
 					return (-1);
 		fg->tlen += 2;

@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:19 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 18:49:25 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/27 16:00:29 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,20 @@
 
 typedef struct s_flags
 {
-	int	minus;
-	int	zero;
-	int	hash;
-	int	space;
-	int	add;
-	int	percision;
-	int	len;
-	int	slen;
-	int	move_len;
-	int	tlen;
-	int	dot;
-	int	neg;
-	int	nul;
-	int	d;
+	int		minus;
+	int		zero;
+	int		hash;
+	int		space;
+	int		add;
+	int		perc;
+	int		len;
+	int		slen;
+	int		mlen;
+	int		tlen;
+	int		dot;
+	int		neg;
+	int		nul;
+	char	*base;
 }	t_flags;
 
 # define CONVERSIONS "%cspdiuxX\0"
@@ -54,10 +54,11 @@ int		count_num_len(int num);
 int		put_char(char c, t_flags *fg);
 int		get_number_size(uintptr_t num, int base_size);
 int		print_number_base(uintptr_t num, char *base, t_flags *fg);
-int		print_number_base_h(uintptr_t nbr, char *base, t_flags *fg, char **buff, int *index);
+int		print_base_h(uintptr_t nbr, t_flags *fg, char **buff, int *index);
 char	*ft_strdup(char *s);
 void	ft_free(char **str);
 int		write_buffer(char *buffer, int len);
+void	check_buffer(char *buff, int *index, char c, t_flags *fg);
 
 //two struct functions
 t_flags	check_flags(char *str, size_t *i, va_list elements);

@@ -6,76 +6,71 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 17:36:52 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 18:54:42 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/27 16:23:43 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
 
-static int	put_str(char *str, int *slen, t_flags *fg)
+static int	put_str(char *str, t_flags *fg, char *buff, int *index)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (str[i] && i < *slen)
+	while (str[i] && i < fg->slen)
 	{
-		if (write(1, &str[i], 1) != 1)
-			return (-1);
-		fg->tlen++;
+		check_buffer(buff, index, str[i], fg);
 		i++;
 	}
 	return (i);
 }
 
-static int	check_string(char *str, t_flags *fg, int *slen)
+static int	check_string(char *str, t_flags *fg, char *buff, int *index)
 {
-	if (fg->percision <= (int)str_length(str) && fg->dot == 1)
-		*slen = fg->percision;
-	else
-		*slen = str_length(str);
 	if (fg->minus == 1)
 	{
-		if (put_str(str, slen, fg) == -1)
+		if (put_str(str, fg, buff, index) == -1)
 			return (-1);
 		while (fg->tlen < fg->len)
-			if (put_char(' ', fg) == -1)
-				return (-1);
+			check_buffer(buff, index, ' ', fg);
 	}
-	else if (fg->len > *slen && fg->zero == 0)
+	else if ((fg->len > fg->slen && fg->zero == 0)
+		|| (fg->len != 0 && fg->zero != 0))
 	{
-		while (fg->tlen < fg->len - *slen)
-			if (put_char(' ', fg) == -1)
-				return (-1);
-		if (put_str(str, slen, fg) == -1)
-			return (-1);
-	}
-	else if (fg->len != 0 && fg->zero != 0)
-	{
-		while (fg->tlen < fg->len - *slen)
-			if (put_char(' ', fg) == -1)
-				return (-1);
-		if (put_str(str, slen, fg) == -1)
+		while (fg->tlen < fg->len - fg->slen)
+			check_buffer(buff, index, ' ', fg);
+		if (put_str(str, fg, buff, index) == -1)
 			return (-1);
 	}
 	else
-		if (put_str(str, slen, fg) == -1)
+		if (put_str(str, fg, buff, index) == -1)
 			return (-1);
 	return (fg->tlen);
 }
 
 int	ft_putstr_bonus(char *str, t_flags *fg)
 {
-	int	len;
-	int slen;
+	int		len;
+	int		slen;
+	char	buff[4096];
+	int		index;
 
 	len = 0;
 	slen = 0;
+	index = 0;
 	if (!str)
 	{
 		str = "(null)";
 		fg->slen = 6;
 		fg->nul = 1;
 	}
-	len = check_string(str, fg, &slen);
-	return (len);
+	if (fg->perc <= (int)str_length(str) && fg->dot == 1)
+		fg->slen = fg->perc;
+	else
+		fg->slen = str_length(str);
+	if (check_string(str, fg, buff, &index) == -1)
+		return (-1);
+	if (write(1, buff, index) == -1)
+		return (-1);
+	return (fg->tlen);
 }

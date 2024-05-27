@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:27:57 by likong            #+#    #+#             */
-/*   Updated: 2024/05/23 18:52:39 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/27 15:48:56 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,34 +20,40 @@ int	put_char(char c, t_flags *fg)
 	return (1);
 }
 
-int	ft_putchar_bonus(int c, t_flags *fg)
+static int	check_char(t_flags *fg, char c, char *buff, int *index)
 {
 	if (fg->minus == 1)
 	{
-		if (put_char((char)c, fg) == -1)
-			return (-1);
+		check_buffer(buff, index, (char)c, fg);
 		while (fg->tlen < fg->len)
-			if (put_char(' ', fg) == -1)
-				return (-1);
+			check_buffer(buff, index, ' ', fg);
 	}
 	else if (fg->len != 0 && fg->zero == 0)
 	{
 		while (fg->tlen < fg->len - 1)
-			if (put_char(' ', fg) == -1)
-				return (-1);
-		if (put_char((char)c, fg) == -1)
-				return (-1);
+			check_buffer(buff, index, ' ', fg);
+		check_buffer(buff, index, (char)c, fg);
 	}
 	else if (fg->len != 0 && fg->zero != 0)
 	{
 		while (fg->tlen < fg->len - 1)
-			if (put_char('0', fg) == -1)
-				return (-1);
-		if (put_char((char)c, fg) == -1)
-				return (-1);
+			check_buffer(buff, index, '0', fg);
+		check_buffer(buff, index, (char)c, fg);
 	}
 	else
-		if (put_char((char)c, fg) == -1)
-				return (-1);
+		check_buffer(buff, index, (char)c, fg);
+	return (1);
+}
+
+int	ft_putchar_bonus(int c, t_flags *fg)
+{
+	char	buff[4096];
+	int		index;
+
+	index = 0;
+	if (check_char(fg, c, buff, &index) == -1)
+		return (-1);
+	if (write(1, buff, index) == -1)
+		return (-1);
 	return (fg->tlen);
 }

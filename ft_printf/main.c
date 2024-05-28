@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../ft_printf_test/ft_printf.h"
+#include "../../ft_printf/ft_printf.h"
 
 void test_pointer_arithmetic() {
     int array[5] = {10, 20, 30, 40, 50};

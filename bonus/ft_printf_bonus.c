@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 13:18:00 by likong            #+#    #+#             */
-/*   Updated: 2024/05/27 16:33:24 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/28 13:45:56 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	check_type(char *str, size_t *i, va_list elements)
 	t_flags	fg;
 
 	fg = check_flags(str, i, elements);
-	if (fg.len > INT_MAX)
-		return (0);
+	if (fg.err == -1)
+		return (-1);
 	if (str[*i] == 'c')
 		return (ft_putchar_bonus(va_arg(elements, int), &fg));
 	else if (str[*i] == 's')

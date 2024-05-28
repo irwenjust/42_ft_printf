@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 20:27:48 by likong            #+#    #+#             */
-/*   Updated: 2024/05/27 16:26:55 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/28 14:30:01 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ static int	check_zero_dot(uintptr_t address, t_flags *fg)
 			if (put_char('0', fg) == -1)
 				return (-1);
 	}
-	if (print_number_base(address, HEXL, fg) == -1)
-		return (-1);
+	if (fg->nul != 1)
+		if (print_number_base(address, HEXL, fg) == -1)
+			return (-1);
 	return (1);
 }
 
@@ -69,8 +70,9 @@ static int	check_minus(uintptr_t address, t_flags *fg)
 				if (put_char('0', fg) == -1)
 					return (-1);
 		fg->tlen += 2;
-		if (print_number_base(address, HEXL, fg) == -1)
-			return (-1);
+		if (fg->nul != 1)
+			if (print_number_base(address, HEXL, fg) == -1)
+				return (-1);
 		while (fg->len > fg->tlen)
 			if (put_char(' ', fg) == -1)
 				return (-1);
@@ -86,6 +88,8 @@ int	ft_putpoint_bonus(void *str, t_flags *fg)
 	uintptr_t	address;
 
 	address = (uintptr_t)str;
+	if (address == 0 && fg->dot == 1)
+		fg->nul = 1;
 	fg->slen = get_number_size(address, 16);
 	if (check_minus(address, fg) == -1)
 		return (-1);

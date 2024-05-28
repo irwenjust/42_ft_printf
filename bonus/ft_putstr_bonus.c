@@ -6,7 +6,7 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 17:36:52 by likong            #+#    #+#             */
-/*   Updated: 2024/05/27 16:23:43 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/28 14:30:03 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,22 @@ static int	check_string(char *str, t_flags *fg, char *buff, int *index)
 {
 	if (fg->minus == 1)
 	{
-		if (put_str(str, fg, buff, index) == -1)
-			return (-1);
+		if (fg->perc >= fg->slen || fg->perc == 0)
+		{
+			if (put_str(str, fg, buff, index) == -1)
+				return (-1);
+		}
 		while (fg->tlen < fg->len)
 			check_buffer(buff, index, ' ', fg);
 	}
-	else if ((fg->len > fg->slen && fg->zero == 0)
-		|| (fg->len != 0 && fg->zero != 0))
+	else if (fg->len > fg->slen)
 	{
-		while (fg->tlen < fg->len - fg->slen)
-			check_buffer(buff, index, ' ', fg);
+		if (fg->zero == 1)
+			while (fg->tlen < fg->len - fg->slen)
+				check_buffer(buff, index, '0', fg);
+		else
+			while (fg->tlen < fg->len - fg->slen)
+				check_buffer(buff, index, ' ', fg);
 		if (put_str(str, fg, buff, index) == -1)
 			return (-1);
 	}

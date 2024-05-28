@@ -6,36 +6,11 @@
 /*   By: likong <likong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:02:11 by likong            #+#    #+#             */
-/*   Updated: 2024/05/27 16:00:52 by likong           ###   ########.fr       */
+/*   Updated: 2024/05/28 14:29:47 by likong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_bonus.h"
-
-void	ft_free(char **str)
-{
-	free(*str);
-	*str = NULL;
-}
-
-char	*ft_strdup(char *s1)
-{
-	char	*dup;
-	size_t	len;
-	size_t	i;
-
-	i = 0;
-	len = str_length(s1);
-	dup = (char *)malloc(len);
-	if (!dup)
-		return (NULL);
-	while (i < len)
-	{
-		((unsigned char *)dup)[i] = ((unsigned char *)s1)[i];
-		i++;
-	}
-	return (dup);
-}
 
 int	print_base_h(uintptr_t nbr, t_flags *fg, char **buff, int *index)
 {
